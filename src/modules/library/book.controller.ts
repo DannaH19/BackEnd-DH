@@ -1,31 +1,39 @@
-
 import { Request, Response, NextFunction } from "express";
-import { BookService } from "../library/book.service";
+import { BookService } from "./book.service";
 
 export class BookController {
-  private _bookService = new BookService();
+  private service = new BookService();
 
-  getBooks = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  getBooks = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this._bookService.getBooks();
-      res.status(200).json(result);
+      const result = await this.service.getBooks();
+
+      res.status(200).json({
+        ok: true,
+        data: result
+      });
+
     } catch (error) {
       next(error);
     }
   };
 
-  createBook = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this._bookService.createBook(req.body);
-      res.status(201).json(result);
+      const { title, author, year } = req.body;
+
+      const result = await this.service.createBook({
+        title,
+        author,
+        year
+      });
+
+      res.status(201).json({
+        ok: true,
+        message: "Libro creado",
+        data: result
+      });
+
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,6 @@
 import { getDb } from "../../config/database";
 import { BookModel } from "../library/book.model";
+import { ObjectId } from "mongodb";
 
 export class BookRepository {
   private collection() {
@@ -10,9 +11,12 @@ export class BookRepository {
     return this.collection().find().toArray();
   }
 
-  async create(book: BookModel): Promise<BookModel | null> {
+  async create(book: BookModel) {
     const result = await this.collection().insertOne(book);
 
-    return { _id: result.insertedId, ...book };
+    return {
+      _id: result.insertedId,
+      ...book
+    };
   }
 }

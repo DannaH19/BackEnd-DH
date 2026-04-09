@@ -4,5 +4,5 @@ export interface BookModel {
   _id?: ObjectId;
   title: string;
   author: string;
-  status: string;
+  year: number;
 }
