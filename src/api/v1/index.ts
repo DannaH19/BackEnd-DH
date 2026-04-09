@@ -1,11 +1,13 @@
 import { Router } from "express";
-import UserRouter from "../../modules/users/users.routes";
-import AuthRouter from "../../modules/auth/auth.routes";
+import UsersRouter from '../../modules/users/users.routes';
+import AuthRouter from '../../modules/auth/auth.routes';
+import bookRoutes from '../../modules/library/book.routes';
+
 
 const router = Router();
 
-
+router.use('/users', UsersRouter);
 router.use('/auth', AuthRouter);
-router.use('/users', UserRouter);
+router.use('/books', bookRoutes);
 
 export default router;
