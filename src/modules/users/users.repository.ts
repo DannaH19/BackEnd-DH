@@ -1,20 +1,41 @@
 import { getDb } from "../../config/database";
+import { User } from "./users.model";
+import { ObjectId } from "mongodb";
 
 export class UsersRepository {
-    private collection(){
-        return getDb().collection('users')
-    }
+  private collection() {
+    return getDb().collection<User>("users");
+  }
 
-    async create(data:any){
-        const result = await this.collection().insertOne(data);
-        return { _id: result.insertedId, ...data }  
-    }
+  async findByEmail(email: string) {
+    return this.collection().findOne({ email });
+  }
 
-    async findAllUsers(){
-        return this.collection().find().toArray();
-    }
+  async create(user: User) {
+    const result = await this.collection().insertOne(user);
+    return {
+      _id: result.insertedId,
+      ...user
+    };
+  }
 
-    async findByEmail(email: string){
-        return this.collection().findOne({email});
-    }
+  async findAllUsers() {
+    return this.collection().find().toArray();
+  }
+
+  async update(id: string, data: any) {
+    const result = await this.collection().findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: data },
+      { returnDocument: "after" }
+    );
+    return result;
+  }
+
+  async delete(id: string) {
+    const result = await this.collection().findOneAndDelete(
+      { _id: new ObjectId(id) }
+    );
+    return result;
+  }
 }

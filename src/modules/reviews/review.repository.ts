@@ -1,25 +1,22 @@
 import { getDb } from "../../config/database";
-import { BookModel } from "../library/book.model";
+import { ReviewModel } from "./review.model";
 import { ObjectId } from "mongodb";
 
-export class BookRepository {
+export class ReviewRepository {
   private collection() {
-    return getDb().collection<BookModel>("books");
+    return getDb().collection<ReviewModel>("reviews");
   }
 
-  async findAll(): Promise<BookModel[]> {
+  async findAll(): Promise<ReviewModel[]> {
     return this.collection().find().toArray();
   }
 
-  async create(book: BookModel) {
-    const result = await this.collection().insertOne(book);
-    return {
-      _id: result.insertedId,
-      ...book
-    };
+  async create(review: ReviewModel) {
+    const result = await this.collection().insertOne(review);
+    return { _id: result.insertedId, ...review };
   }
 
-  async update(id: string, data: Partial<BookModel>) {
+  async update(id: string, data: Partial<ReviewModel>) {
     const result = await this.collection().findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: data },
