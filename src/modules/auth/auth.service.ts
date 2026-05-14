@@ -2,6 +2,7 @@ import { AuthRepository } from "./auth.repository";
 import { User } from "../users/users.model";
 import { hashPassword, comparePassword } from "../../libs/bcrypt";
 import { signToken } from "../../libs/jwt";
+import { HttpError } from "../../libs/http-error";
 
 export class AuthService {
 
@@ -11,7 +12,7 @@ export class AuthService {
     const exists = await this.repository.findEmail(user.email);
 
     if (exists) {
-      throw new Error('el usuario ya existe');
+      throw new HttpError(400, 'el usuario ya existe');
     }
 
     const hashedPassword = await hashPassword(user.password);
