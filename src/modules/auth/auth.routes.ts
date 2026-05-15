@@ -57,7 +57,7 @@ const _AuthController = new AuthController();
  *                       example: user
  *                 token:
  *                   type: string
- *                   example:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OWUwZmU2ZjM1NjA0ZTQ4ZjFjZWVmMDYiLCJlbWFpbCI6ImRhbm5hQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc4ODA4MjgwLCJleHAiOjE3Nzg4OTQ2ODB9._iRE5hN32S01q71GcnhrfdYGmfbmGEwm1G4Y4wcQNVc
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       400:
  *         description: El usuario ya existe
  */
@@ -112,7 +112,7 @@ router.post('/register', _AuthController.register);
  *                       example: user
  *                 token:
  *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OWUwZmU2ZjM1NjA0ZTQ4ZjFjZWVmMDYiLCJlbWFpbCI6ImRhbm5hQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc4ODA4MjgwLCJleHAiOjE3Nzg4OTQ2ODB9._iRE5hN32S01q71GcnhrfdYGmfbmGEwm1G4Y4wcQNVc
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
  *       400:
  *         description: Usuario no existe o credenciales inválidas
  */
