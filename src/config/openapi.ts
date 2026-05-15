@@ -16,7 +16,7 @@ const options: swaggerJSDoc.Options = {
         description: 'Documentacion de endpoints de la biblioteca',
       },
       {
-        url: 'https://library-dh.onrender.com/api',
+        url: 'https://library-dh.onrender.com/api/v1',
         description: 'Documentacion de endpoints de la biblioteca',
     }
     ],
