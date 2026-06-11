@@ -13,11 +13,19 @@ export class BookController {
     }
   };
 
+  getBookById = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.service.getBookById(req.params.id);
+      res.status(200).json({ ok: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { title, author, year } = req.body;
-      const result = await this.service.createBook({ title, author, year });
-      res.status(201).json({ ok: true, message: "Libro creado", data: result });
+      const result = await this.service.createBook(req.body);
+      res.status(201).json({ ok: true, ...result });
     } catch (error) {
       next(error);
     }
@@ -36,6 +44,16 @@ export class BookController {
     try {
       const result = await this.service.deleteBook(req.params.id);
       res.status(200).json({ ok: true, ...result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  searchBooks = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { q } = req.query;
+      const result = await this.service.searchBooks(q as string);
+      res.status(200).json({ ok: true, data: result });
     } catch (error) {
       next(error);
     }

@@ -8,12 +8,12 @@ const options: swaggerJSDoc.Options = {
     info: {
       title: 'Api Library',
       version: '1.0.0',
-      description: 'Documentacion de endpoints de la biblioteca',
+      description: 'API para gestión de biblioteca con préstamos, libros, autores y más',
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
-        description: 'Documentacion de endpoints de la biblioteca',
+        url: 'http://localhost:3000/api/v1',
+        description: 'Servidor de desarrollo',
       },
       {
         url: 'https://library-dh.onrender.com/api/v1',
@@ -29,7 +29,7 @@ const options: swaggerJSDoc.Options = {
         }
       }
     },
-    security: [        // ← agrega esto
+    security: [
       {
         bearerAuth: []
       }

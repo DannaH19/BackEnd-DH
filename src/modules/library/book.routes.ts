@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { BookController } from "../library/book.controller";
+import { BookController } from "./book.controller";
 
 const router = Router();
 const bookController = new BookController();
@@ -9,7 +9,7 @@ const bookController = new BookController();
  * /books:
  *   get:
  *     summary: Obtener todos los libros
- *     description: Retorna una lista con todos los libros registrados en el sistema
+ *     description: Retorna una lista con todos los libros registrados, incluyendo autor, categoría y editorial
  *     tags:
  *       - Books
  *     responses:
@@ -28,20 +28,69 @@ const bookController = new BookController();
  *                   items:
  *                     type: object
  *                     properties:
- *                       id:
+ *                       _id:
  *                         type: string
- *                         example: 6643f1b2c3a4e500123abcd1
  *                       title:
  *                         type: string
- *                         example: Cien años de soledad
  *                       author:
- *                         type: string
- *                         example: Gabriel García Márquez
+ *                         type: object
+ *                       category:
+ *                         type: object
+ *                       publisher:
+ *                         type: object
  *                       year:
  *                         type: number
- *                         example: 1967
+ *                       isbn:
+ *                         type: string
+ *                       pages:
+ *                         type: number
+ *                       availableCopies:
+ *                         type: number
  */
 router.get("/", bookController.getBooks);
+
+/**
+ * @openapi
+ * /books/search:
+ *   get:
+ *     summary: Buscar libros
+ *     description: Busca libros por título, descripción o ISBN
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Término de búsqueda
+ *     responses:
+ *       200:
+ *         description: Resultados de búsqueda
+ */
+router.get("/search", bookController.searchBooks);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   get:
+ *     summary: Obtener un libro por ID
+ *     description: Retorna los detalles de un libro específico
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Libro encontrado
+ *       404:
+ *         description: Libro no encontrado
+ */
+router.get("/:id", bookController.getBookById);
 
 /**
  * @openapi
@@ -60,52 +109,32 @@ router.get("/", bookController.getBooks);
  *             required:
  *               - title
  *               - author
+ *               - category
  *               - year
+ *               - isbn
  *             properties:
  *               title:
  *                 type: string
- *                 example: Cien años de soledad
  *               author:
  *                 type: string
- *                 example: Gabriel García Márquez
+ *               category:
+ *                 type: string
+ *               publisher:
+ *                 type: string
  *               year:
  *                 type: number
- *                 example: 1967
+ *               isbn:
+ *                 type: string
+ *               pages:
+ *                 type: number
+ *               description:
+ *                 type: string
+ *               totalCopies:
+ *                 type: number
+ *                 default: 1
  *     responses:
  *       201:
  *         description: Libro creado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Libro creado
- *                 data:
- *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       example: Libro creado correctamente
- *                     book:
- *                       type: object
- *                       properties:
- *                         id:
- *                           type: string
- *                           example: 6643f1b2c3a4e500123abcd1
- *                         title:
- *                           type: string
- *                           example: Cien años de soledad
- *                         author:
- *                           type: string
- *                           example: Gabriel García Márquez
- *                         year:
- *                           type: number
- *                           example: 1967
  *       400:
  *         description: Error al crear el libro
  */
@@ -116,7 +145,7 @@ router.post("/", bookController.createBook);
  * /books/{id}:
  *   put:
  *     summary: Actualizar un libro
- *     description: Actualiza los datos de un libro existente por su ID
+ *     description: Actualiza los datos de un libro existente
  *     tags:
  *       - Books
  *     parameters:
@@ -125,7 +154,6 @@ router.post("/", bookController.createBook);
  *         required: true
  *         schema:
  *           type: string
- *         example: 6643f1b2c3a4e500123abcd1
  *     requestBody:
  *       required: true
  *       content:
@@ -135,42 +163,25 @@ router.post("/", bookController.createBook);
  *             properties:
  *               title:
  *                 type: string
- *                 example: Cien años de soledad
  *               author:
  *                 type: string
- *                 example: Gabriel García Márquez
+ *               category:
+ *                 type: string
+ *               publisher:
+ *                 type: string
  *               year:
  *                 type: number
- *                 example: 1967
+ *               isbn:
+ *                 type: string
+ *               pages:
+ *                 type: number
+ *               description:
+ *                 type: string
+ *               totalCopies:
+ *                 type: number
  *     responses:
  *       200:
  *         description: Libro actualizado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Libro actualizado correctamente
- *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: 6643f1b2c3a4e500123abcd1
- *                     title:
- *                       type: string
- *                       example: Cien años de soledad
- *                     author:
- *                       type: string
- *                       example: Gabriel García Márquez
- *                     year:
- *                       type: number
- *                       example: 1967
  *       404:
  *         description: Libro no encontrado
  */
@@ -181,7 +192,7 @@ router.put("/:id", bookController.updateBook);
  * /books/{id}:
  *   delete:
  *     summary: Eliminar un libro
- *     description: Elimina un libro del sistema por su ID
+ *     description: Elimina un libro del sistema
  *     tags:
  *       - Books
  *     parameters:
@@ -190,21 +201,9 @@ router.put("/:id", bookController.updateBook);
  *         required: true
  *         schema:
  *           type: string
- *         example: 6643f1b2c3a4e500123abcd1
  *     responses:
  *       200:
  *         description: Libro eliminado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 ok:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Libro eliminado correctamente
  *       404:
  *         description: Libro no encontrado
  */
